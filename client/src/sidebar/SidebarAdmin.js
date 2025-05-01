@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import {
   ChevronDown,
   House,
@@ -12,6 +13,7 @@ import {
 const SidebarAdmin = () => {
   const [openMenu, setOpenMenu] = useState("");
   const navigate = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? "" : menu);
@@ -21,6 +23,21 @@ const SidebarAdmin = () => {
     localStorage.removeItem("userInfo");
     navigate("/");
   };
+
+  useEffect(() => {
+    const fetchUnread = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/notifikasi/unread?role=Admin"
+        );
+        setUnreadCount(res.data.unreadCount);
+      } catch (err) {
+        console.error("Failed to fetch data", err);
+      }
+    };
+
+    fetchUnread();
+  }, []);
 
   return (
     <div
@@ -112,6 +129,19 @@ const SidebarAdmin = () => {
           style={{ width: "40px", height: "40px" }}
         >
           <Bell size={30} />
+          {unreadCount > 0 && (
+            <span
+              style={{
+                position: "absolute",
+                top: "5px",
+                right: "5px",
+                width: "10px",
+                height: "10px",
+                backgroundColor: "red",
+                borderRadius: "50%",
+              }}
+            ></span>
+          )}
         </Link>
 
         <div className="dropdown">

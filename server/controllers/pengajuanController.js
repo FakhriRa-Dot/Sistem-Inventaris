@@ -35,7 +35,7 @@ const updateStatusPengajuan = async (req, res) => {
       return res.status(400).json({ message: "Invalid status" });
     }
 
-    const pengajuan = await Pengajuan.findById(id);
+    const pengajuan = await Pengajuan.findById(id).populate("kode_barang");
     if (!pengajuan) {
       return res
         .status(404)

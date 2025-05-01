@@ -26,6 +26,19 @@ const tandaiSudahDibaca = async (req, res) => {
   }
 };
 
+const getBelumDibaca = async (req, res) => {
+  try {
+    const { role } = req.query;
+    const count = await Notifikasi.countDocuments({
+      role_target: role,
+      read: false,
+    });
+    res.status(200).json({ unreadCount: count });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch data" });
+  }
+};
+
 const hapusNotifikasi = async (req, res) => {
   try {
     const { id } = req.params;
@@ -41,4 +54,5 @@ module.exports = {
   getNotifikasiByRole,
   tandaiSudahDibaca,
   hapusNotifikasi,
+  getBelumDibaca,
 };

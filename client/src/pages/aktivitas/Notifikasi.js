@@ -22,7 +22,9 @@ const Notifikasi = () => {
   useEffect(() => {
     const fetchNotif = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/notifikasi");
+        const res = await axios.get(
+          "http://localhost:5000/api/notifikasi?role=Admin"
+        );
         setNotifikasi(res.data);
       } catch (error) {
         console.error("Failed to load data:", error);
