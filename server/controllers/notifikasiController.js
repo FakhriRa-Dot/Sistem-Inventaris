@@ -15,8 +15,12 @@ const getNotifikasiByRole = async (req, res) => {
 
 const tandaiSudahDibaca = async (req, res) => {
   try {
-    const { id } = req.params;
-    await Notifikasi.findByIdAndUpdate(id, { read: true });
+    const { role } = req.params;
+
+    await Notifikasi.updateMany(
+      { role_target: role, read: false },
+      { $set: { read: true } }
+    );
     res
       .status(200)
       .json({ message: "Notifikasi ditandai sebagai sudah dibaca" });

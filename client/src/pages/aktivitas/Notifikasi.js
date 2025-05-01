@@ -31,6 +31,17 @@ const Notifikasi = () => {
       }
     };
 
+    const sudahDibaca = async () => {
+      try {
+        await axios.put("http://localhost:5000api/notifikasi/read", {
+          role: "Admin",
+        });
+      } catch (error) {
+        console.error("Failed to get Notification:", error);
+      }
+    };
+
+    sudahDibaca();
     fetchNotif();
   }, []);
 

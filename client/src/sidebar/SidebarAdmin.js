@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import {
   ChevronDown,
@@ -13,6 +13,7 @@ import {
 const SidebarAdmin = () => {
   const [openMenu, setOpenMenu] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const [unreadCount, setUnreadCount] = useState(0);
 
   const toggleMenu = (menu) => {
@@ -37,7 +38,7 @@ const SidebarAdmin = () => {
     };
 
     fetchUnread();
-  }, []);
+  }, [location]);
 
   return (
     <div

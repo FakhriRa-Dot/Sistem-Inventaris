@@ -8,7 +8,7 @@ const {
 } = require("../controllers/notifikasiController");
 
 router.get("/", getNotifikasiByRole);
-router.patch("/:id/read", tandaiSudahDibaca);
+router.patch("/read", tandaiSudahDibaca);
 router.delete("/:id", hapusNotifikasi);
 router.get("/unread", getBelumDibaca);
 
