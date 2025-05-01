@@ -7,6 +7,7 @@ const userRoutes = require("./routes/user");
 const activityRoutes = require("./routes/activityRoutes");
 const inventarisRoutes = require("./routes/inventarisRoutes");
 const pengajuanRoutes = require("./routes/pengajuanRoutes");
+const notifikasiRoutes = require("./routes/notifikasiRoutes");
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use("/api/login-activity", activityRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/inventaris", inventarisRoutes);
 app.use("/api/pengajuan", pengajuanRoutes);
+app.use("/api/notifikasi", notifikasiRoutes);
 
 connectDB();
 

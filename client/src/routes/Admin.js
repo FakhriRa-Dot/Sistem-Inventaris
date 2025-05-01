@@ -9,6 +9,7 @@ import DataPengguna from "../pages/pengguna/DataPengguna";
 import KelolaPengguna from "../pages/pengguna/KelolaPengguna";
 import KelolaInventaris from "../pages/inventaris/KelolaInventaris";
 import LoginActivity from "../pages/pengguna/LoginActivty";
+import Notifikasi from "../pages/aktivitas/Notifikasi";
 
 const Admin = () => {
   return (
@@ -66,6 +67,14 @@ const Admin = () => {
         element={
           <AdminLayout>
             <LoginActivity />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/Notifikasi"
+        element={
+          <AdminLayout>
+            <Notifikasi />
           </AdminLayout>
         }
       />

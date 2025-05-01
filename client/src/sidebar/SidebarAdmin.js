@@ -6,6 +6,7 @@ import {
   AlignStartVertical,
   User,
   BookUser,
+  Bell,
 } from "lucide-react";
 
 const SidebarAdmin = () => {
@@ -104,27 +105,37 @@ const SidebarAdmin = () => {
         </li>
       </ul>
 
-      <div className="dropdown mt-auto align-self-end">
-        <button
-          className="btn p-0 border-0 bg-transparent d-flex align-items-center justify-content-center rounded-circle"
-          type="button"
-          id="dropdownUser"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
+      <div className="d-flex align-items-center justify-content-end gap-3 mt-auto">
+        <Link
+          to="/Admin/Notifikasi"
+          className="text-dark position-relative d-flex align-items-center justify-content-center"
           style={{ width: "40px", height: "40px" }}
         >
-          <User size={24} className="text-dark" />
-        </button>
-        <ul
-          className="dropdown-menu dropdown-menu-end"
-          aria-labelledby="dropdownUser"
-        >
-          <li>
-            <button className="dropdown-item" onClick={handleLogout}>
-              Log Out
-            </button>
-          </li>
-        </ul>
+          <Bell size={30} />
+        </Link>
+
+        <div className="dropdown">
+          <button
+            className="btn p-0 border-0 bg-transparent d-flex align-items-center justify-content-center rounded-circle"
+            type="button"
+            id="dropdownUser"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            style={{ width: "40px", height: "40px" }}
+          >
+            <User size={30} className="text-dark" />
+          </button>
+          <ul
+            className="dropdown-menu dropdown-menu-end"
+            aria-labelledby="dropdownUser"
+          >
+            <li>
+              <button className="dropdown-item" onClick={handleLogout}>
+                Log Out
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

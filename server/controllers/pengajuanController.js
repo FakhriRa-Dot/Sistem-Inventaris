@@ -1,5 +1,6 @@
 const Pengajuan = require("../models/Pengajuan");
 const Inventaris = require("../models/Inventaris");
+const Notifikasi = require("../models/Notifikasi");
 
 const buatPengajuan = async (req, res) => {
   try {
@@ -68,6 +69,16 @@ const updateStatusPengajuan = async (req, res) => {
     pengajuan.status = status;
     await pengajuan.save();
 
+    if (pengajuan.jenis_pengajuan === "Permintaan" && status === "Diterima") {
+      await Notifikasi.create({
+        type: "Permintaan Disetujui",
+        message: `Permintaan Barang '${
+          pengajuan.nama_barang || pengajuan.kode_barang?.nama_barang
+        }' telah disetujui oleh Kabid.`,
+        pengajuan_id: pengajuan._id,
+        role_target: "Admin",
+      });
+    }
     res
       .status(200)
       .json({ message: "Status pengajuan berhasil diperbarui", pengajuan });
