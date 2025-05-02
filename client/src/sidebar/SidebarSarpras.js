@@ -147,7 +147,7 @@ const SidebarSarpras = () => {
           aria-expanded="false"
           style={{ width: "40px", height: "40px" }}
         >
-          <User size={24} className="text-dark" />
+          <User size={30} className="text-dark" />
         </button>
         <ul
           className="dropdown-menu dropdown-menu-end"

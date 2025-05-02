@@ -1,10 +1,20 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Archive, Bookmark, ChevronDown, House, User } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Archive,
+  Bookmark,
+  ChevronDown,
+  House,
+  User,
+  Bell,
+} from "lucide-react";
 
 const SidebarKabid = () => {
   const [openMenu, setOpenMenu] = useState("");
+  const [unread, setUnread] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
@@ -14,6 +24,21 @@ const SidebarKabid = () => {
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? "" : menu);
   };
+
+  useEffect(() => {
+    const fetchUnread = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:5000/api/notifikasi/unread?role=Admin"
+        );
+        setUnread(res.data.unread);
+      } catch (err) {
+        console.error("Failed to fetch data", err);
+      }
+    };
+
+    fetchUnread();
+  }, [location]);
 
   return (
     <div
@@ -129,28 +154,49 @@ const SidebarKabid = () => {
           </Link>
         </li>
       </ul>
-
-      <div className="dropdown mt-auto align-self-end">
-        <button
-          className="btn p-0 border-0 bg-transparent d-flex align-items-center justify-content-center rounded-circle"
-          type="button"
-          id="dropdownUser"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
+      <div className="d-flex align-items-center justify-content-end gap-3 mt-auto">
+        <Link
+          to="/Kabid/Notifikasi"
+          className="text-dark position-relative d-flex align-items-center justify-content-center"
           style={{ width: "40px", height: "40px" }}
         >
-          <User size={24} className="text-dark" />
-        </button>
-        <ul
-          className="dropdown-menu dropdown-menu-end"
-          aria-labelledby="dropdownUser"
-        >
-          <li>
-            <button className="dropdown-item" onClick={handleLogout}>
-              Log Out
-            </button>
-          </li>
-        </ul>
+          <Bell size={30} />
+          {unread > 0 && (
+            <span
+              style={{
+                position: "absolute",
+                top: "5px",
+                right: "5px",
+                width: "10px",
+                height: "10px",
+                backgroundColor: "red",
+                borderRadius: "50%",
+              }}
+            ></span>
+          )}
+        </Link>
+        <div className="dropdown mt-auto align-self-end">
+          <button
+            className="btn p-0 border-0 bg-transparent d-flex align-items-center justify-content-center rounded-circle"
+            type="button"
+            id="dropdownUser"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            style={{ width: "40px", height: "40px" }}
+          >
+            <User size={30} className="text-dark" />
+          </button>
+          <ul
+            className="dropdown-menu dropdown-menu-end"
+            aria-labelledby="dropdownUser"
+          >
+            <li>
+              <button className="dropdown-item" onClick={handleLogout}>
+                Log Out
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

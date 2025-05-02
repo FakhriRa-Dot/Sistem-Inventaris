@@ -8,32 +8,46 @@ const HomeSarpras = () => {
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("userInfo");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const loadUserAndActivities = async () => {
+      const storedUser = localStorage.getItem("userInfo");
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        try {
+          const { data } = await axios.get(
+            `http://localhost:5000/api/login-activity/user-activities?user_id=${parsedUser.user_id}`
+          );
+          setActivities(data);
+        } catch (error) {
+          console.error(
+            "Gagal memuat aktivitas:",
+            error.response?.data || error.message
+          );
+        }
+      }
+    };
+
+    loadUserAndActivities();
   }, []);
 
   return (
     <div className="container mt-4">
       <h2 className="mb-4 text-center">Dashboard Sarpras</h2>
 
-      <div className="card mb-4">
-        <Card className="mb-4">
-          <Card.Body>
-            <h5>Info Pengguna</h5>
-            <p>
-              <strong>Nama: </strong> {user.name}
-            </p>
-            <p>
-              <strong>Email: </strong> {user.email}
-            </p>
-            <p>
-              <strong>Role: </strong> {user.role}
-            </p>
-          </Card.Body>
-        </Card>
-      </div>
+      <Card className="mb-4">
+        <Card.Body>
+          <h5>Info Pengguna</h5>
+          <p>
+            <strong>Nama: </strong> {user.name}
+          </p>
+          <p>
+            <strong>Email: </strong> {user.email}
+          </p>
+          <p>
+            <strong>Role: </strong> {user.role}
+          </p>
+        </Card.Body>
+      </Card>
 
       <div className="row g-3 mb-4">
         <div className="col-12">
@@ -76,11 +90,28 @@ const HomeSarpras = () => {
         </div>
       </div>
 
-      <div className="card shadow-sm">
-        <div className="card-body">
-          <h4 className="card-title mb-3">Aktivitas Terkini</h4>
-        </div>
-      </div>
+      <Card className="shadow-sm">
+        <Card.Body>
+          <Card.Title className="mb-3">Aktivitas Terkini</Card.Title>
+          {activities.length === 0 ? (
+            <p className="text-muted">Belum ada aktivitas.</p>
+          ) : (
+            <ul className="list-group">
+              {activities.map((activity, index) => (
+                <li key={index} className="list-group-item">
+                  <strong>{activity.type}</strong>: {activity.nama_barang} (
+                  {activity.jumlah})
+                  <br />
+                  <small className="text-muted">
+                    {new Date(activity.time).toLocaleString()} | Status:{" "}
+                    {activity.status}
+                  </small>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card.Body>
+      </Card>
     </div>
   );
 };

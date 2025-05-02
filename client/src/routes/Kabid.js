@@ -8,6 +8,7 @@ import RiwayatKabid from "../pages/aktivitas/RiwayatKabid";
 import PeminjamanKabid from "../pages/peminjaman/PeminjamanKabid";
 import PermintaanKabid from "../pages/permintaan/PermintaanKabid";
 import PengembalianKabid from "../pages/pengembalian/PengembalianKabid";
+import Notifikasi from "../pages/aktivitas/Notifikasi";
 
 const Kabid = () => {
   return (
@@ -57,6 +58,14 @@ const Kabid = () => {
         element={
           <KabidLayout>
             <PengembalianKabid />
+          </KabidLayout>
+        }
+      />
+      <Route
+        path="/Notifikasi"
+        element={
+          <KabidLayout>
+            <Notifikasi />
           </KabidLayout>
         }
       />

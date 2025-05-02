@@ -26,7 +26,11 @@ const StatusSarpras = () => {
       axios
         .get("http://localhost:5000/api/pengajuan")
         .then((res) => {
-          const dataUser = res.data.filter((item) => item.user_id === user._id);
+          console.log("Semua data pengajuan:", res.data);
+          const dataUser = res.data.filter(
+            (item) => item.user_id?._id === user._id
+          );
+          console.log("Pengajuan user:", dataUser);
           setPengajuan(dataUser);
         })
         .catch((err) => console.error("Failed to fetch data:", err));
@@ -37,6 +41,14 @@ const StatusSarpras = () => {
     const filtered = pengajuan.filter(
       (p) => p.jenis_pengajuan === jenis && p.status !== "Diterima"
     );
+
+    console.log("Filtered data for:", jenis, filtered);
+
+    if (filtered.length === 0) {
+      return (
+        <p className="text-muted">Tidak ada data pengajuan untuk jenis ini.</p>
+      );
+    }
 
     return (
       <table className="table table-bordered mt-3">
@@ -52,10 +64,13 @@ const StatusSarpras = () => {
           {filtered.map((item, index) => (
             <tr key={item._id}>
               <td>{index + 1}</td>
-              <td>
+              {/* <td>
                 {item.kode_barang
                   ? item.kode_barang.nama_barang
                   : item.nama_barang}
+              </td> */}
+              <td>
+                {item.kode_barang?.nama_barang || item.nama_barang || "-"}
               </td>
               <td>{new Date(item.tgl_pengajuan).toLocaleDateString()}</td>
               <td>
