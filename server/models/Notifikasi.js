@@ -1,22 +1,22 @@
 const mongoose = require("mongoose");
 
-const notifSchema = new mongoose.Schema({
+const NotifikasiSchema = new mongoose.Schema({
+  userTarget: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  userFrom: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   type: {
     type: String,
+    enum: ["Peminjaman", "Pengembalian", "Permintaan", "Perpanjangan"],
     required: true,
   },
   message: {
     type: String,
-    required: true,
-  },
-  pengajuan_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Pengajuan",
-    required: "false",
-  },
-  role_target: {
-    type: String,
-    enum: ["Admin", "Kabid", "Sarpas"],
     required: true,
   },
   read: {
@@ -29,4 +29,4 @@ const notifSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Notifikasi", notifSchema);
+module.exports = mongoose.model("Notifikasi", NotifikasiSchema);

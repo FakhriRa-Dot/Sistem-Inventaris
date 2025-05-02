@@ -1,62 +1,43 @@
 const Notifikasi = require("../models/Notifikasi");
 
-const getNotifikasiByRole = async (req, res) => {
+const getNotifikasiByUser = async (req, res) => {
   try {
-    const { role } = req.query;
-    const notifikasi = await Notifikasi.find({ role_target: role }).sort({
-      createdAt: -1,
-    });
-    res.status(200).json(notifikasi);
+    const { userTarget } = req.params;
+    if (!userTarget || userTarget === "undefined") {
+      return res.status(400).json({ message: "userTarget tidak valid" });
+    }
+
+    const notifikasi = await Notifikasi.find({ userTarget });
+    res.json(notifikasi);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Gagal mengambil notifikasi" });
+    console.error("Error getNotifikasiByUser:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-const tandaiSudahDibaca = async (req, res) => {
-  try {
-    const { role } = req.params;
-
-    await Notifikasi.updateMany(
-      { role_target: role, read: false },
-      { $set: { read: true } }
-    );
-    res
-      .status(200)
-      .json({ message: "Notifikasi ditandai sebagai sudah dibaca" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Gagal memperbarui notifikasi" });
-  }
-};
-
-const getBelumDibaca = async (req, res) => {
-  try {
-    const { role } = req.query;
-    const count = await Notifikasi.countDocuments({
-      role_target: role,
-      read: false,
-    });
-    res.status(200).json({ unreadCount: count });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch data" });
-  }
-};
-
-const hapusNotifikasi = async (req, res) => {
+const markAsRead = async (req, res) => {
   try {
     const { id } = req.params;
-    await Notifikasi.findByIdAndDelete(id);
-    res.status(200).json({ message: "Notifikasi dihapus" });
+    await Notifikasi.findByIdAndUpdate(id, { read: true });
+    res.status(200).json({ message: "Notifikasi ditandai sebagai dibaca" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Gagal menghapus notifikasi" });
+    console.error("Error markAsRead:", error);
+    res.status(500).json({ message: "Gagal menandai notifikasi" });
   }
 };
 
+const getUnreadByRole = async (req, res) => {
+  const role = req.query.role;
+
+  try {
+    const unread = await Notifikasi.find({ role, isRead: false });
+    res.json(unread);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 module.exports = {
-  getNotifikasiByRole,
-  tandaiSudahDibaca,
-  hapusNotifikasi,
-  getBelumDibaca,
+  getNotifikasiByUser,
+  markAsRead,
+  getUnreadByRole,
 };

@@ -1,15 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getNotifikasiByRole,
-  tandaiSudahDibaca,
-  hapusNotifikasi,
-  getBelumDibaca,
+  getNotifikasiByUser,
+  markAsRead,
+  getUnreadByRole,
 } = require("../controllers/notifikasiController");
 
-router.get("/", getNotifikasiByRole);
-router.patch("/read", tandaiSudahDibaca);
-router.delete("/:id", hapusNotifikasi);
-router.get("/unread", getBelumDibaca);
+router.get("/user/:userId", getNotifikasiByUser);
+router.put("/read/:id", markAsRead);
+router.get("/unread", getUnreadByRole);
 
 module.exports = router;
