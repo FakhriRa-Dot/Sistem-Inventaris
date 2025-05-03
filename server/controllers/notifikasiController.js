@@ -2,12 +2,16 @@ const Notifikasi = require("../models/Notifikasi");
 
 const getNotifikasiByUser = async (req, res) => {
   try {
-    const { userTarget } = req.params;
-    if (!userTarget || userTarget === "undefined") {
-      return res.status(400).json({ message: "userTarget tidak valid" });
+    const { userId } = req.params;
+
+    if (!userId || userId === "undefined") {
+      return res.status(400).json({ message: "User ID tidak valid" });
     }
 
-    const notifikasi = await Notifikasi.find({ userTarget });
+    const notifikasi = await Notifikasi.find({ userTarget: userId }).sort({
+      createdAt: -1,
+    });
+
     res.json(notifikasi);
   } catch (error) {
     console.error("Error getNotifikasiByUser:", error);
@@ -30,12 +34,13 @@ const getUnreadByRole = async (req, res) => {
   const role = req.query.role;
 
   try {
-    const unread = await Notifikasi.find({ role, isRead: false });
+    const unread = await Notifikasi.find({ role, read: false });
     res.json(unread);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 module.exports = {
   getNotifikasiByUser,
   markAsRead,

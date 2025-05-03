@@ -5,8 +5,33 @@ const User = require("../models/User");
 
 const buatPengajuan = async (req, res) => {
   try {
+    const { kode_barang, nama_barang } = req.body;
+
+    console.log("Request Body:", req.body);
+
+    if (!kode_barang && !nama_barang) {
+      return res
+        .status(400)
+        .json({ message: "Harap isi kode barang atau nama barang." });
+    }
+
     const pengajuan = new Pengajuan(req.body);
     await pengajuan.save();
+    await pengajuan.populate("kode_barang");
+
+    console.log("Pengajuan Setelah Populate:", pengajuan);
+
+    let nama_barang_final = "Barang Tidak Dikenali";
+    if (pengajuan.kode_barang) {
+      nama_barang_final =
+        pengajuan.kode_barang.nama_barang ||
+        pengajuan.nama_barang ||
+        "Barang Tidak Dikenali";
+    } else {
+      nama_barang_final = pengajuan.nama_barang || "Barang Tidak Dikenali";
+    }
+
+    console.log("Nama Barang Final:", nama_barang_final);
 
     const kabid = await User.findOne({ role: "kabid" });
     const pengaju = await User.findById(pengajuan.user_id);
@@ -14,7 +39,7 @@ const buatPengajuan = async (req, res) => {
     if (kabid && pengaju) {
       await Notifikasi.create({
         type: pengajuan.jenis_pengajuan,
-        message: `Pengajuan '${pengajuan.kode_barang?.nama_barang}' dari ${pengaju.name} telah dibuat.`,
+        message: `Pengajuan '${nama_barang_final}' dari ${pengaju.name} telah dibuat.`,
         userTarget: kabid._id,
         userFrom: pengajuan.user_id,
       });
@@ -91,11 +116,15 @@ const updateStatusPengajuan = async (req, res) => {
     if (pengajuan.jenis_pengajuan === "Permintaan" && status === "Diterima") {
       const admin = await User.findOne({ role: "admin" });
       if (admin) {
+        const nama_barang =
+          pengajuan.kode_barang?.nama_barang ||
+          pengajuan.nama_barang ||
+          "Barang Tidak Dikenali";
         await Notifikasi.create({
           userTarget: admin._id,
           userFrom: req.user?._id || null,
           type: "Permintaan",
-          message: `Permintaan barang '${pengajuan.kode_barang?.nama_barang}' oleh ${pengajuan.user_id.name} disetujui.`,
+          message: `Permintaan barang '${nama_barang}' oleh ${pengajuan.user_id.name} disetujui.`,
         });
       }
     }

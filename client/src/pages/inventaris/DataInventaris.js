@@ -10,6 +10,8 @@ const DataInventaris = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [statusFilter, setStatusFilter] = useState("");
   const [tipeFilter, setTipeFilter] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [tipeBarangList, setTipeBarangList] = useState([]);
 
@@ -18,11 +20,17 @@ const DataInventaris = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const res = await axios.get("http://localhost:5000/api/inventaris");
+        console.log("Data inventaris:", res.data);
         setData(res.data);
         setFilteredData(res.data);
+        setError(null);
       } catch (error) {
         console.error("Failed to fetch data:", error);
+        setError("Gagal memuat data inventaris");
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -36,7 +44,7 @@ const DataInventaris = () => {
         );
         setTipeBarangList(res.data);
       } catch (error) {
-        console.error("Failed to fetch item:", error);
+        console.error("Failed to fetch item types:", error);
       }
     };
     fetchTipeBarang();
@@ -50,6 +58,9 @@ const DataInventaris = () => {
       filtered = filtered.filter((item) => item.tipe_barang === tipeFilter);
     setFilteredData(filtered);
   }, [statusFilter, tipeFilter, data]);
+
+  if (loading) return <p>Memuat data inventaris...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="container mt-4">
@@ -66,7 +77,7 @@ const DataInventaris = () => {
           <Form.Select onChange={(e) => setTipeFilter(e.target.value)}>
             <option value="">Filter Tipe Barang</option>
             {tipeBarangList.map((tipe, index) => (
-              <option key={index} value={tipe}>
+              <option key={`tipe-${index}`} value={tipe}>
                 {tipe}
               </option>
             ))}
@@ -88,7 +99,8 @@ const DataInventaris = () => {
         </thead>
         <tbody>
           {filteredData.map((item, index) => (
-            <tr key={item.kode_barang}>
+            // Gunakan item._id sebagai key utama, atau kombinasi item._id dan index sebagai fallback
+            <tr key={item._id || `item-${index}`}>
               <td>{index + 1}</td>
               <td>{item.nama_barang}</td>
               <td>{item.tipe_barang}</td>

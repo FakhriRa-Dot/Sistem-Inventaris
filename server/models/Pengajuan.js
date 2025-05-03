@@ -14,13 +14,13 @@ const pengajuanSchema = new mongoose.Schema({
   nama_barang: {
     type: String,
     required: function () {
-      return this.jenis_pengajuan === "permintaan";
+      return this.jenis_pengajuan === "Permintaan";
     },
   },
   alasan: {
     type: String,
     required: function () {
-      return this.jenis_pengajuan === "permintaan";
+      return this.jenis_pengajuan === "Permintaan";
     },
   },
   jumlah_barang: { type: Number, required: true },
@@ -40,7 +40,7 @@ const pengajuanSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Pengajuan",
     required: function () {
-      return this.jenis_pengajuan === "pengembalian";
+      return this.jenis_pengajuan === "Pengembalian";
     },
   },
 });
