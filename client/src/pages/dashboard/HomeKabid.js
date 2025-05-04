@@ -51,7 +51,7 @@ const HomeKabid = () => {
             to="/Kabid/Laporan-Inventaris"
             className="btn btn-primary w-100"
           >
-            Laporan Inventaris
+            Laporan
           </Link>
         </div>
         <div className="col-6 col-md-2">

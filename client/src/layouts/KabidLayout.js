@@ -7,7 +7,7 @@ const KabidLayout = ({ children }) => {
     <PrivateRoute allowedRoles={["kabid"]}>
       <div className="d-flex">
         <SidebarKabid />
-        <main className="flex-grow-1 p-3" style={{ marginLeft: "250" }}>
+        <main className="flex-grow-1 p-3" style={{ marginLeft: "250px" }}>
           {children}
         </main>
       </div>

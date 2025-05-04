@@ -39,7 +39,7 @@ const HomeAdmin = () => {
         setJumlahBarang(res.data);
 
         const resPeminjaman = await axios.get(
-          "http://localhost:5000/api/pengajuan//statistik/bulanan"
+          "http://localhost:5000/api/pengajuan/statistik/bulanan"
         );
         setChartData({
           labels: resPeminjaman.data.labels,
@@ -86,7 +86,7 @@ const HomeAdmin = () => {
 
       <div className="row">
         <div className="col-md-6">
-          <Card className="text-center bg-succes text-white">
+          <Card className="text-center bg-success text-white">
             <Card.Body>
               <h5>Barang Tersedia</h5>
               <h2>{jumlahBarang.tersedia}</h2>
