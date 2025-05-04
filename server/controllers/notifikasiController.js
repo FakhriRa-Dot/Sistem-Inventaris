@@ -41,8 +41,29 @@ const getUnreadByRole = async (req, res) => {
   }
 };
 
+const getUnreadCountByUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId || userId === "undefined") {
+      return res.status(400).json({ message: "User ID tidak valid" });
+    }
+
+    const count = await Notifikasi.countDocuments({
+      userTarget: userId,
+      read: false,
+    });
+
+    res.json({ count });
+  } catch (error) {
+    console.error("Error getUnreadCountByUser:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   getNotifikasiByUser,
   markAsRead,
   getUnreadByRole,
+  getUnreadCountByUser,
 };

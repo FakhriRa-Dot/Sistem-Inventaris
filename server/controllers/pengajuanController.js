@@ -7,8 +7,6 @@ const buatPengajuan = async (req, res) => {
   try {
     const { kode_barang, nama_barang } = req.body;
 
-    console.log("Request Body:", req.body);
-
     if (!kode_barang && !nama_barang) {
       return res
         .status(400)
@@ -19,8 +17,6 @@ const buatPengajuan = async (req, res) => {
     await pengajuan.save();
     await pengajuan.populate("kode_barang");
 
-    console.log("Pengajuan Setelah Populate:", pengajuan);
-
     let nama_barang_final = "Barang Tidak Dikenali";
     if (pengajuan.kode_barang) {
       nama_barang_final =
@@ -30,8 +26,6 @@ const buatPengajuan = async (req, res) => {
     } else {
       nama_barang_final = pengajuan.nama_barang || "Barang Tidak Dikenali";
     }
-
-    console.log("Nama Barang Final:", nama_barang_final);
 
     const kabid = await User.findOne({ role: "kabid" });
     const pengaju = await User.findById(pengajuan.user_id);

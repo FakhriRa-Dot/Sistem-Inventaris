@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { Alert, Spinner } from "react-bootstrap";
+import { Alert, Spinner, Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Notifikasi = () => {
@@ -8,6 +8,8 @@ const Notifikasi = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedNotif, setSelectedNotif] = useState(null);
 
   useEffect(() => {
     try {
@@ -70,6 +72,34 @@ const Notifikasi = () => {
     }
   };
 
+  const handleShowDetail = (notif) => {
+    setSelectedNotif(notif);
+    setShowModal(true);
+
+    // Jika notifikasi belum dibaca, tandai sebagai dibaca
+    if (!notif.read) {
+      handleMarkAsRead(notif._id);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleMarkAllAsRead = async () => {
+    if (!user || !user.user_id) return;
+
+    try {
+      await axios.put(
+        `http://localhost:5000/api/notifikasi/read/all/${user.user_id}`
+      );
+      fetchNotifikasi();
+    } catch (err) {
+      console.error("Gagal menandai semua notifikasi sebagai dibaca:", err);
+      setError(`Error: ${err.message}`);
+    }
+  };
+
   if (!user) {
     return (
       <div className="container mt-4">
@@ -100,18 +130,18 @@ const Notifikasi = () => {
     );
   }
 
+  const unreadNotifications = notifikasi.filter((notif) => !notif.read);
+
   return (
     <div className="container mt-4">
-      <h2>Notifikasi</h2>
-
-      {process.env.NODE_ENV === "development" && (
-        <div className="bg-light p-2 mb-3 rounded">
-          <small>
-            <strong>Debug Info:</strong> User ID: {user.user_id}, Role:{" "}
-            {user.role}
-          </small>
-        </div>
-      )}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2>Notifikasi</h2>
+        {unreadNotifications.length > 0 && (
+          <Button variant="outline-primary" onClick={handleMarkAllAsRead}>
+            Tandai Semua Sudah Dibaca
+          </Button>
+        )}
+      </div>
 
       {notifikasi.length === 0 ? (
         <Alert variant="info">Tidak ada notifikasi</Alert>
@@ -129,20 +159,54 @@ const Notifikasi = () => {
                 <small>{new Date(notif.createdAt).toLocaleString()}</small>
               </div>
               <p className="mb-1">{notif.message}</p>
-              {!notif.read && (
-                <div className="mt-2">
+              <div className="mt-2 d-flex">
+                <button
+                  className="btn btn-sm btn-info me-2"
+                  onClick={() => handleShowDetail(notif)}
+                >
+                  Detail
+                </button>
+                {!notif.read && (
                   <button
                     className="btn btn-sm btn-primary"
                     onClick={() => handleMarkAsRead(notif._id)}
                   >
                     Tandai sudah dibaca
                   </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           ))}
         </div>
       )}
+
+      {/* Modal Detail Notifikasi */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>{selectedNotif?.type}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            <strong>Pesan:</strong> {selectedNotif?.message}
+          </p>
+          <p>
+            <strong>Waktu:</strong>{" "}
+            {selectedNotif
+              ? new Date(selectedNotif.createdAt).toLocaleString()
+              : ""}
+          </p>
+          {selectedNotif?.userFrom && (
+            <p>
+              <strong>Pengirim:</strong> {selectedNotif.userFrom}
+            </p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Tutup
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
