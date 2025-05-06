@@ -97,10 +97,10 @@ const SidebarKabid = () => {
             </li>
             <li>
               <Link
-                to="/Kabid/Laporan-Inventaris"
+                to="/Kabid/Laporan-Aktivitas"
                 className="nav-link text-dark"
               >
-                Laporan Inventaris
+                Laporan Aktivitas
               </Link>
             </li>
           </ul>

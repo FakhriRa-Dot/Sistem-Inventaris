@@ -77,6 +77,7 @@ const updateStatusPengajuan = async (req, res) => {
         .json({ message: "Data pengajuan tidak ditemukan" });
     }
 
+    // Cek apakah status sudah berubah menjadi 'Diterima'
     if (pengajuan.status !== "Diterima" && status === "Diterima") {
       if (pengajuan.kode_barang) {
         const inventaris = await Inventaris.findById(pengajuan.kode_barang);
@@ -102,6 +103,14 @@ const updateStatusPengajuan = async (req, res) => {
         inventaris.status = inventaris.jumlah > 0 ? "Tersedia" : "Dipinjam";
         await inventaris.save();
       }
+
+      // Catat tanggal persetujuan
+      pengajuan.statusDates.Diterima = new Date();
+    }
+
+    // Cek apakah status sudah berubah menjadi 'Ditolak'
+    if (pengajuan.status !== "Ditolak" && status === "Ditolak") {
+      pengajuan.statusDates.Ditolak = new Date();
     }
 
     pengajuan.status = status;
@@ -196,10 +205,50 @@ const getStatistikBulanan = async (req, res) => {
   }
 };
 
+const getLaporanPengajuan = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    let pengajuan;
+    if (userId) {
+      // Validate userId before querying
+      if (!userId || typeof userId !== "string") {
+        return res.status(400).json({ message: "Invalid user ID provided." });
+      }
+      try {
+        // Attempt to convert userId to ObjectId
+        const objectId = new mongoose.Types.ObjectId(userId);
+        pengajuan = await Pengajuan.find({ user_id: objectId })
+          .populate("user_id")
+          .populate("kode_barang");
+      } catch (error) {
+        console.error("Error validating userId:", error);
+        return res.status(400).json({ message: "Invalid user ID provided." });
+      }
+    } else {
+      pengajuan = await Pengajuan.find()
+        .populate("user_id")
+        .populate("kode_barang");
+    }
+    const laporan = pengajuan.map((item, index) => ({
+      No: index + 1,
+      Tanggal: (item.createdAt || new Date(0)).toISOString().split("T")[0],
+      "Nama Barang": item.kode_barang?.nama_barang || "-",
+      Pengaju: item.user_id?.nama || "-",
+      Persetujuan: item.status,
+      "Jenis Pengajuan": item.jenis_pengajuan,
+    }));
+    res.json(laporan);
+  } catch (error) {
+    console.error("Error getLaporanPengajuan:", error);
+    res.status(500).json({ message: "Gagal mengambil data laporan" });
+  }
+};
+
 module.exports = {
   buatPengajuan,
   getAllPengajuan,
   updateStatusPengajuan,
   getPengembalianDanPerpanjangan,
   getStatistikBulanan,
+  getLaporanPengajuan,
 };

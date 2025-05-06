@@ -9,6 +9,7 @@ import PeminjamanKabid from "../pages/peminjaman/PeminjamanKabid";
 import PermintaanKabid from "../pages/permintaan/PermintaanKabid";
 import PengembalianKabid from "../pages/pengembalian/PengembalianKabid";
 import Notifikasi from "../pages/aktivitas/Notifikasi";
+import LaporanKabid from "../pages/aktivitas/LaporanKabid";
 
 const Kabid = () => {
   return (
@@ -34,6 +35,14 @@ const Kabid = () => {
         element={
           <KabidLayout>
             <RiwayatKabid />
+          </KabidLayout>
+        }
+      />
+      <Route
+        path="/Laporan-Aktivitas"
+        element={
+          <KabidLayout>
+            <LaporanKabid />
           </KabidLayout>
         }
       />

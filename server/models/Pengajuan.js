@@ -34,7 +34,7 @@ const pengajuanSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["Proses", "Diterima", "Ditolak"],
-    default: "proses",
+    default: "Proses",
   },
   id_peminjaman: {
     type: mongoose.Schema.Types.ObjectId,
@@ -42,6 +42,11 @@ const pengajuanSchema = new mongoose.Schema({
     required: function () {
       return this.jenis_pengajuan === "Pengembalian";
     },
+  },
+  statusDates: {
+    Proses: { type: Date, default: Date.now },
+    Diterima: { type: Date },
+    Ditolak: { type: Date },
   },
 });
 

@@ -6,10 +6,10 @@ import HomeSarpras from "../pages/dashboard/HomeSarpras";
 import DataInventaris from "../pages/inventaris/DataInventaris";
 import StatusSarpras from "../pages/aktivitas/StatusSarpras";
 import RiwayatSarpras from "../pages/aktivitas/RiwayatSarpras";
-import LaporanInventaris from "../pages/inventaris/LaporanInventaris";
 import PeminjamanSarpras from "../pages/peminjaman/PeminjamanSarpras";
 import PermintaanSarpras from "../pages/permintaan/PermintaanSarpras";
 import PengembalianSarpras from "../pages/pengembalian/PengembalianSarpras";
+import LaporanSarpras from "../pages/aktivitas/LaporanSarpras";
 
 const Sarpras = () => {
   return (
@@ -47,10 +47,10 @@ const Sarpras = () => {
         }
       />
       <Route
-        path="/Laporan-Inventaris"
+        path="/Laporan-Aktivitas"
         element={
           <SarprasLayout>
-            <LaporanInventaris />
+            <LaporanSarpras />
           </SarprasLayout>
         }
       />

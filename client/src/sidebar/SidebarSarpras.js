@@ -80,10 +80,10 @@ const SidebarSarpras = () => {
             </li>
             <li>
               <Link
-                to="/Sarpras/Laporan-Inventaris"
+                to="/Sarpras/Laporan-Aktivitas"
                 className="nav-link text-dark"
               >
-                Laporan Inventaris
+                Laporan Aktivitas
               </Link>
             </li>
           </ul>

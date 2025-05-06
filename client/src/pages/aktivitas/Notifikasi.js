@@ -76,7 +76,6 @@ const Notifikasi = () => {
     setSelectedNotif(notif);
     setShowModal(true);
 
-    // Jika notifikasi belum dibaca, tandai sebagai dibaca
     if (!notif.read) {
       handleMarkAsRead(notif._id);
     }
