@@ -32,7 +32,9 @@ const tambahInventaris = async (req, res) => {
 
     const existingItem = await Inventaris.findOne({ nama_barang, tipe_barang });
     if (existingItem) {
-      existingItem.jumlah += Number(jumlah);
+      const jumlahBaru = Number(jumlah);
+      existingItem.jumlah += jumlahBaru;
+      existingItem.jumlah_awal += jumlahBaru; // update juga jumlah_awal
       existingItem.tgl_masuk = tgl_masuk;
       existingItem.kondisi_barang = kondisi_barang;
       existingItem.sumber = sumber;
@@ -43,11 +45,22 @@ const tambahInventaris = async (req, res) => {
         data: existingItem,
       });
     }
-    const newData = new Inventaris(req.body);
+
+    const newData = new Inventaris({
+      nama_barang,
+      tipe_barang,
+      kondisi_barang,
+      tgl_masuk,
+      sumber,
+      jumlah,
+      jumlah_awal: jumlah,
+    });
+
     await newData.save();
-    res
-      .status(201)
-      .json({ message: "Inventaris added successfully", data: newData });
+    res.status(201).json({
+      message: "Inventaris added successfully",
+      data: newData,
+    });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -55,9 +68,11 @@ const tambahInventaris = async (req, res) => {
 
 const updateInventaris = async (req, res) => {
   try {
+    const { jumlah_awal, ...safeBody } = req.body;
+
     const updated = await Inventaris.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      safeBody,
       { new: true }
     );
     if (!updated)
@@ -116,6 +131,25 @@ const getKondisiBarangList = async (req, res) => {
   res.json(list);
 };
 
+const getLaporanInventaris = async (req, res) => {
+  try {
+    const data = await Inventaris.find();
+    const totalJumlahAwal = data.reduce(
+      (sum, item) => sum + (item.jumlah_awal || 0),
+      0
+    );
+
+    res.status(200).json({
+      total_jumlah_awal: totalJumlahAwal,
+      data,
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Gagal memuat laporan inventaris", error: err });
+  }
+};
+
 module.exports = {
   getInventaris,
   getInventarisById,
@@ -127,4 +161,5 @@ module.exports = {
   getSumberList,
   getTipeBarangList,
   getKondisiBarangList,
+  getLaporanInventaris,
 };

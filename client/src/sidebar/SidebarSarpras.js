@@ -53,7 +53,7 @@ const SidebarSarpras = () => {
           >
             <span>
               <Bookmark size={18} className="me-2" />
-              Laporan
+              Aktivitas
             </span>
             <ChevronDown size={18} />
           </div>
@@ -76,14 +76,6 @@ const SidebarSarpras = () => {
                 className="nav-link text-dark"
               >
                 Riwayat Transaksi
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/Sarpras/Laporan-Aktivitas"
-                className="nav-link text-dark"
-              >
-                Laporan Aktivitas
               </Link>
             </li>
           </ul>

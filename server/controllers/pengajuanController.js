@@ -210,15 +210,16 @@ const getLaporanPengajuan = async (req, res) => {
     const { userId } = req.query;
     let pengajuan;
     if (userId) {
-      // Validate userId before querying
       if (!userId || typeof userId !== "string") {
         return res.status(400).json({ message: "Invalid user ID provided." });
       }
       try {
-        // Attempt to convert userId to ObjectId
         const objectId = new mongoose.Types.ObjectId(userId);
         pengajuan = await Pengajuan.find({ user_id: objectId })
-          .populate("user_id")
+          .populate({
+            path: "user_id",
+            select: "name",
+          })
           .populate("kode_barang");
       } catch (error) {
         console.error("Error validating userId:", error);
@@ -226,14 +227,17 @@ const getLaporanPengajuan = async (req, res) => {
       }
     } else {
       pengajuan = await Pengajuan.find()
-        .populate("user_id")
+        .populate({
+          path: "user_id",
+          select: "name",
+        })
         .populate("kode_barang");
     }
     const laporan = pengajuan.map((item, index) => ({
       No: index + 1,
       Tanggal: (item.createdAt || new Date(0)).toISOString().split("T")[0],
       "Nama Barang": item.kode_barang?.nama_barang || "-",
-      Pengaju: item.user_id?.nama || "-",
+      Pengaju: item.user_id?.name || "-",
       Persetujuan: item.status,
       "Jenis Pengajuan": item.jenis_pengajuan,
     }));

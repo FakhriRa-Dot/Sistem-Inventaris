@@ -10,9 +10,11 @@ const {
   getInventarisStats,
   getSumberList,
   getKondisiBarangList,
+  getLaporanInventaris,
 } = require("../controllers/inventarisController");
 
 router.get("/", getInventaris);
+router.get("/laporan", getLaporanInventaris);
 router.get("/stats", getInventarisStats);
 router.get("/:id", getInventarisById);
 router.post("/", tambahInventaris);

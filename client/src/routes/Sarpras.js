@@ -9,7 +9,6 @@ import RiwayatSarpras from "../pages/aktivitas/RiwayatSarpras";
 import PeminjamanSarpras from "../pages/peminjaman/PeminjamanSarpras";
 import PermintaanSarpras from "../pages/permintaan/PermintaanSarpras";
 import PengembalianSarpras from "../pages/pengembalian/PengembalianSarpras";
-import LaporanSarpras from "../pages/aktivitas/LaporanSarpras";
 
 const Sarpras = () => {
   return (
@@ -43,14 +42,6 @@ const Sarpras = () => {
         element={
           <SarprasLayout>
             <RiwayatSarpras />
-          </SarprasLayout>
-        }
-      />
-      <Route
-        path="/Laporan-Aktivitas"
-        element={
-          <SarprasLayout>
-            <LaporanSarpras />
           </SarprasLayout>
         }
       />

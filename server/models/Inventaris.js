@@ -20,6 +20,10 @@ const inventarisSchema = new mongoose.Schema(
       required: true,
       default: 1,
     },
+    jumlah_awal: {
+      type: Number,
+      required: true,
+    },
     tgl_masuk: {
       type: Date,
       required: true,

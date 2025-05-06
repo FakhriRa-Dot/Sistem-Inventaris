@@ -17,14 +17,12 @@ const TambahBarang = ({ show, onHide }) => {
   const [newTipe, setNewTipe] = useState("");
   const [newSumber, setNewSumber] = useState("");
 
-  const tipeOptions = ["Elektronik", "ATK", "Gadget", newTipe].filter(Boolean);
-  const sumberOptions = [
-    "Donasi",
-    "Sumbangan",
-    "Hibah",
-    "Pembelian",
-    newSumber,
-  ].filter(Boolean);
+  const tipeOptions = ["Elektronik", "ATK", "Rumah Tangga", newTipe].filter(
+    Boolean
+  );
+  const sumberOptions = ["Sumbangan", "Hibah", "Pembelian", newSumber].filter(
+    Boolean
+  );
 
   useEffect(() => {
     const fetchNamaBarang = async () => {
@@ -151,7 +149,11 @@ const TambahBarang = ({ show, onHide }) => {
               className="mt-2"
               placeholder="Tambah tipe baru (opsional)"
               value={newTipe}
-              onChange={(e) => setNewTipe(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setNewTipe(value);
+                setForm((prev) => ({ ...prev, tipe_barang: value }));
+              }}
             />
           </Form.Group>
 
@@ -173,7 +175,11 @@ const TambahBarang = ({ show, onHide }) => {
               className="mt-2"
               placeholder="Tambah sumber baru (opsional)"
               value={newSumber}
-              onChange={(e) => setNewSumber(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setNewSumber(value);
+                setForm((prev) => ({ ...prev, sumber: value }));
+              }}
             />
           </Form.Group>
         </Form>
